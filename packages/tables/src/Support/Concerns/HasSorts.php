@@ -24,6 +24,10 @@ trait HasSorts
         }
 
         $this->getSortableColumns()->each(function (BaseColumn $column) use ($sorts, $query) {
+            if ($column->hasDefaultSort()) {
+                $column->applySortQuery($query, $column->getDefaultSortDirection());
+            }
+
             if (!$sort = data_get($sorts, $column->getName())) {
                 return;
             }
@@ -48,7 +52,7 @@ trait HasSorts
 
         return $this->cachedTableSorts = collect(explode(',', $sorts))->mapWithKeys(function (string $sort) use ($sortableColumnNames) {
             if (!$sortableColumnNames->contains(ltrim($sort, '-'))) {
-                return null;
+                return [];
             }
 
             $name = ltrim($sort, '-');

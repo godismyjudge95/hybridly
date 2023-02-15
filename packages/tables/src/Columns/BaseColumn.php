@@ -8,6 +8,7 @@ use Hybridly\Tables\Support\Concerns;
 
 abstract class BaseColumn extends Component
 {
+    use Columns\Concerns\CanTransformValue;
     use Columns\Concerns\IsSortable;
     use Concerns\HasLabel;
     use Concerns\HasMetadata;
@@ -18,7 +19,7 @@ abstract class BaseColumn extends Component
     final public function __construct(string $name)
     {
         $this->name($name);
-        $this->label(str($name)->headline()->lower()->ucfirst());
+        $this->label(str($name)->afterLast('.')->headline()->lower()->ucfirst());
         $this->type('custom');
         $this->setUp();
     }

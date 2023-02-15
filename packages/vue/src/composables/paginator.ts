@@ -43,12 +43,19 @@ declare global {
 		url: string | undefined
 		label: string
 		isPage: boolean
+		/** Whether the item can be navigated to. */
 		isActive: boolean
+		/** Whether the item is a link to the previous page. */
 		isPrevious: boolean
+		/** Whether the item is a link to the next page. */
 		isNext: boolean
+		/** Whether the item is the first link. */
 		isFirst: boolean
+		/** Whether the item is the last link. */
 		isLast: boolean
+		/** Whether the item is the current link. */
 		isCurrent: boolean
+		/** Whether the item is a page separator. */
 		isSeparator: boolean
 	}
 }

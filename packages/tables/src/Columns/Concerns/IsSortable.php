@@ -10,11 +10,12 @@ trait IsSortable
     protected bool $isSortable = false;
     protected ?array $sortColumns = [];
     protected ?\Closure $sortQuery = null;
+    protected null|\Closure|string|bool $default = null;
 
     /**
      * Defines whether the column should be sortable.
      */
-    public function sortable(bool|array $conditionOrColumns = true, ?\Closure $query = null): static
+    public function sortable(bool|array $conditionOrColumns = true, ?\Closure $query = null, null|\Closure|string|bool $default = null): static
     {
         if (\is_array($conditionOrColumns)) {
             $this->isSortable = true;
@@ -25,8 +26,21 @@ trait IsSortable
         }
 
         $this->sortQuery = $query;
+        $this->default = $default;
 
         return $this;
+    }
+
+    public function hasDefaultSort(): bool
+    {
+        return !!$this->default;
+    }
+
+    public function getDefaultSortDirection(): string
+    {
+        return \is_string($this->default)
+            ? $this->default
+            : 'asc';
     }
 
     public function getSortColumns(): array

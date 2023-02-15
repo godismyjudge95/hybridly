@@ -23,14 +23,21 @@ class Table implements HasTable
     use Concerns\HasScope;
     use Concerns\HasSorts;
 
+    protected array $queryTransforms = [];
+
     public function __construct(
         protected Request $request,
     ) {
+        $this->configure();
     }
 
     public static function make(): static
     {
         return resolve(static::class);
+    }
+
+    protected function configure(): void
+    {
     }
 
     /** @var array<BaseFilter> */
@@ -60,6 +67,22 @@ class Table implements HasTable
     protected function getTableQuery(): Builder
     {
         return $this->getModel()->query();
+    }
+
+    protected function applyQueryTransforms(Builder $query): void
+    {
+        foreach ($this->queryTransforms as $transform) {
+            $this->evaluate($transform, [
+                'query' => $query,
+            ]);
+        }
+    }
+
+    public function transformQuery(\Closure $callback): static
+    {
+        $this->queryTransforms[] = $callback;
+
+        return $this;
     }
 
     protected function getModel(): Model

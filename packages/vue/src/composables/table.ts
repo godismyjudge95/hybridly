@@ -5,7 +5,7 @@ import { computed, reactive, ref } from 'vue'
 import { usePaginator } from './paginator'
 
 declare global {
-	interface Table<T extends object = never> {
+	interface Table<T extends Record<string, any> = any> {
 		id: string
 		keyName: string
 		scope?: string

@@ -35,7 +35,7 @@ trait HasFilters
             $this->cachedCurrentFilters[$filter->getName()] = $this->getFilterValueFromRequest($filter);
         }
 
-        return $this->cachedCurrentFilters;
+        return $this->cachedCurrentFilters ?? [];
     }
 
     protected function applyFiltersToTableQuery(Builder $query): Builder

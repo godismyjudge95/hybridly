@@ -2,9 +2,11 @@
 
 namespace Hybridly\Tables\Support\Concerns;
 
+use Hybridly\Tables\Columns\BaseColumn;
 use Illuminate\Contracts\Database\Eloquent\Builder;
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 
 /** @mixin \Hybridly\Tables\Table */
 trait HasRecords
@@ -14,12 +16,35 @@ trait HasRecords
     protected int $recordsPerPage = 15;
     protected ?string $model = null;
 
-    public function getPaginatedRecords(): LengthAwarePaginator
+    public function getPaginatedRecords(): Paginator
     {
-        return $this->cachedRecords ??= $this->paginateRecords($this->getFilteredQuery());
+        return $this->cachedRecords ??= $this->transformPaginatedRecords();
     }
 
-    protected function paginateRecords(Builder $query): LengthAwarePaginator
+    protected function transformPaginatedRecords(): Paginator
+    {
+        $paginatedRecords = $this->paginateRecords($this->getFilteredQuery());
+
+        $columnNames = $this->getTableColumns()->map->getName();
+        $columnsWithTransforms = $this->getTableColumns()->filter(function (BaseColumn $column) {
+            return $column->canTransformValue();
+        });
+
+        if ($columnsWithTransforms->isEmpty()) {
+            return $paginatedRecords;
+        }
+
+        $result = $paginatedRecords->through(fn (Model $record) => array_filter([
+            ...$record->toArray(),
+            ...$columnsWithTransforms->mapWithKeys(function (BaseColumn $column) use ($record) {
+                return [$column->getName() => $column->getTransformedValue($record)];
+            }),
+        ], fn (string $key) => \in_array($key, [...$columnNames->toArray(), $this->getKeyName()], true), \ARRAY_FILTER_USE_KEY));
+
+        return $result;
+    }
+
+    protected function paginateRecords(Builder $query): Paginator
     {
         return $query->paginate(
             pageName: $this->formatScope('page'),
@@ -31,6 +56,7 @@ trait HasRecords
     {
         $query = $this->getTableQuery();
 
+        $this->applyQueryTransforms($query);
         $this->applyFiltersToTableQuery($query);
         $this->applySortingToTableQuery($query);
 

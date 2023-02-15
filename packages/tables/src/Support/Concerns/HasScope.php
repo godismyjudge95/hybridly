@@ -11,7 +11,7 @@ trait HasScope
         return $this->scope;
     }
 
-    protected function formatScope(?string $type = null): string
+    protected function formatScope(?string $type = null): ?string
     {
         if (!$this->getScope()) {
             return $type;

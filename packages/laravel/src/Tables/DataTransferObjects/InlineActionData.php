@@ -19,7 +19,7 @@ final class InlineActionData
         return new static(
             action: $request->string('action'),
             recordId: $request->integer('record'),
-            id: $request->string('id'),
+            id: decrypt($request->string('id')),
             type: $request->string('type'),
         );
     }

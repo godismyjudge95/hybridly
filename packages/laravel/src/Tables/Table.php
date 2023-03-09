@@ -94,7 +94,7 @@ class Table implements HasTable
     public function jsonSerialize(): mixed
     {
         return [
-            'id' => static::class,
+            'id' => encrypt(static::class),
             'keyName' => $this->getKeyName(),
             'records' => $this->getPaginatedRecords(),
             'columns' => $this->getTableColumns()->all(),

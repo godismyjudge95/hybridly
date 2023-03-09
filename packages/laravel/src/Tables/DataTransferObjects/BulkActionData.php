@@ -19,7 +19,7 @@ final class BulkActionData
     {
         return new static(
             action: $request->string('action'),
-            id: $request->string('id'),
+            id: decrypt($request->string('id')),
             all: $request->boolean('all'),
             except: $request->input('except', []),
             only: $request->input('only', []),

@@ -1,7 +1,7 @@
 {
   "name": "@hybridly/vue",
-  "version": "0.0.1-alpha.22",
-  "description": "A solution to develop server-driven, client-rendered applications",
+  "version": "0.1.0-alpha.3",
+  "description": "Vue adapter for Hybridly",
   "keywords": [
     "hybridly",
     "inertiajs",
@@ -42,11 +42,12 @@
     "vue": "^3.2.45"
   },
   "dependencies": {
+    "@hybridly/config": "workspace:*",
     "@hybridly/core": "workspace:*",
     "@hybridly/progress-plugin": "workspace:*",
     "@hybridly/utils": "workspace:*",
-    "@vue/devtools-api": "^6.4.5",
-    "defu": "^6.1.1",
+    "@vue/devtools-api": "^6.5.0",
+    "defu": "^6.1.2",
     "lodash.isequal": "^4.5.0",
     "nprogress": "^0.2.0",
     "qs": "^6.11.0"
@@ -56,6 +57,6 @@
     "@types/lodash.clonedeep": "^4.5.7",
     "@types/lodash.isequal": "^4.5.6",
     "@types/nprogress": "^0.2.0",
-    "vue": "^3.2.45"
+    "vue": "^3.2.47"
   }
 }

@@ -2,6 +2,7 @@
 
 namespace Hybridly;
 
+use Hybridly\Commands\GenerateGlobalTypesCommand;
 use Hybridly\Commands\I18nCommand;
 use Hybridly\Commands\InstallCommand;
 use Hybridly\Commands\RoutesCommand;
@@ -14,6 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Router;
 use Illuminate\Testing\TestResponse;
 use Illuminate\View\Compilers\BladeCompiler;
+use Illuminate\View\Factory;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
@@ -26,6 +28,7 @@ class ServiceProvider extends PackageServiceProvider
             ->hasConfigFile()
             ->hasCommand(InstallCommand::class)
             ->hasCommand(I18nCommand::class)
+            ->hasCommand(GenerateGlobalTypesCommand::class)
             ->hasCommand(RoutesCommand::class);
     }
 
@@ -41,19 +44,9 @@ class ServiceProvider extends PackageServiceProvider
             $app['config']->get('hybridly.testing.page_paths'),
             $app['config']->get('hybridly.testing.page_extensions'),
         ));
-    }
 
-    protected function registerMacros(): void
-    {
-        /* Checks if the request is hybrid. */
-        Request::macro('isHybrid', fn () => hybridly()->isHybrid());
-        /* Serves a hybrid route. */
-        Router::macro('hybridly', function (string $uri, string $component, array $properties = []) {
-            // @phpstan-ignore-next-line
-            return $this->match(['GET', 'HEAD'], $uri, Controller::class)
-                ->defaults('component', $component)
-                ->defaults('properties', $properties)
-            ;
+        $this->callAfterResolving('view', function (Factory $view) {
+            $view->addLocation(resource_path('application'));
         });
     }
 
@@ -73,8 +66,7 @@ class ServiceProvider extends PackageServiceProvider
                         preg_match('/([\w -]+): *[\'"]([\w -]+)[\'"]/', $e, $matches);
 
                         return [$matches[1] => $matches[2]];
-                    })
-                ;
+                    });
 
                 $element = $options->get('element', 'div');
                 $id = $options->get('id', 'root');
@@ -85,6 +77,19 @@ class ServiceProvider extends PackageServiceProvider
 
                 return implode(' ', array_map('trim', explode("\n", $template)));
             });
+        });
+    }
+
+    protected function registerMacros(): void
+    {
+        /** Checks if the request is hybrid. */
+        Request::macro('isHybrid', fn () => hybridly()->isHybrid());
+        /** Serves a hybrid route. */
+        Router::macro('hybridly', function (string $uri, string $component, array $properties = []) {
+            /** @phpstan-ignore-next-line */
+            return $this->match(['GET', 'HEAD'], $uri, Controller::class)
+                ->defaults('component', $component)
+                ->defaults('properties', $properties);
         });
     }
 

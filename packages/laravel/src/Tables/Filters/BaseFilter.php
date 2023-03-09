@@ -1,24 +1,26 @@
 <?php
 
-namespace Hybridly\Tables\Actions;
+namespace Hybridly\Tables\Filters;
 
-use Hybridly\Tables\Actions;
-use Hybridly\Tables\Support\Component;
-use Hybridly\Tables\Support\Concerns;
+use Hybridly\Tables\Filters;
+use Hybridly\Tables\Component;
+use Hybridly\Tables\Concerns;
 
-abstract class BaseAction extends Component
+abstract class BaseFilter extends Component
 {
-    use Actions\Concerns\HasAction;
     use Concerns\HasLabel;
     use Concerns\HasMetadata;
     use Concerns\HasName;
     use Concerns\HasType;
     use Concerns\IsHideable;
+    use Filters\Concerns\HasDefaultValue;
+    use Filters\Concerns\InteractsWithTableQuery;
 
     final public function __construct(string $name)
     {
         $this->name($name);
         $this->label(str($name)->headline()->lower()->ucfirst());
+        $this->type('custom');
         $this->setUp();
     }
 
@@ -32,7 +34,7 @@ abstract class BaseAction extends Component
     protected function getDefaultEvaluationParameters(): array
     {
         return [
-            'action' => $this,
+            'filter' => $this,
         ];
     }
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Hybridly\Tables\Support\Concerns;
+namespace Hybridly\Tables\Concerns;
 
 use Hybridly\Tables\Actions\BulkAction;
 use Illuminate\Support\Collection;

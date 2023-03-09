@@ -7,6 +7,9 @@ use Hybridly\Tables\Contracts\HasTable;
 use Hybridly\Tables\DataTransferObjects\BulkActionData;
 use Hybridly\Tables\DataTransferObjects\EndpointCallData;
 use Hybridly\Tables\DataTransferObjects\InlineActionData;
+use Hybridly\Tables\Exceptions\CouldNotResolveTableException;
+use Hybridly\Tables\Exceptions\InvalidActionException;
+use Hybridly\Tables\Exceptions\InvalidTableException;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -28,12 +31,14 @@ final class HybridEndpointController
 
     private function resolveAction(InlineActionData|BulkActionData $data): array
     {
-        // TODO: improve exception
-        $table = resolve($data->id);
+        try {
+            $table = resolve($data->id);
+        } catch (\Throwable) {
+            throw new CouldNotResolveTableException($data->id);
+        }
 
-        // TODO: custom exception
         if (!\in_array(HasTable::class, class_implements($data->id), true)) {
-            throw new \Exception('Table class must implement ' . HasTable::class);
+            throw new InvalidTableException($data->id);
         }
 
         $actions = match ($data::class) {
@@ -44,7 +49,7 @@ final class HybridEndpointController
         $action = $actions->first(fn (BaseAction $action) => $action->getName() === $data->action);
 
         if (!$action) {
-            throw new \Exception('Invalid action: ' . $data->action);
+            throw new InvalidActionException($data->action, $data->id);
         }
 
         return [$table, $action];

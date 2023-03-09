@@ -1,15 +1,14 @@
 <?php
 
-namespace Hybridly\Tables\Columns;
+namespace Hybridly\Tables\Actions;
 
-use Hybridly\Tables\Columns;
-use Hybridly\Tables\Support\Component;
-use Hybridly\Tables\Support\Concerns;
+use Hybridly\Tables\Actions;
+use Hybridly\Tables\Component;
+use Hybridly\Tables\Concerns;
 
-abstract class BaseColumn extends Component
+abstract class BaseAction extends Component
 {
-    use Columns\Concerns\CanTransformValue;
-    use Columns\Concerns\IsSortable;
+    use Actions\Concerns\HasAction;
     use Concerns\HasLabel;
     use Concerns\HasMetadata;
     use Concerns\HasName;
@@ -19,8 +18,7 @@ abstract class BaseColumn extends Component
     final public function __construct(string $name)
     {
         $this->name($name);
-        $this->label(str($name)->afterLast('.')->headline()->lower()->ucfirst());
-        $this->type('custom');
+        $this->label(str($name)->headline()->lower()->ucfirst());
         $this->setUp();
     }
 
@@ -34,7 +32,7 @@ abstract class BaseColumn extends Component
     protected function getDefaultEvaluationParameters(): array
     {
         return [
-            'column' => $this,
+            'action' => $this,
         ];
     }
 
@@ -42,10 +40,8 @@ abstract class BaseColumn extends Component
     {
         return [
             'name' => $this->getName(),
-            'type' => $this->getType(),
             'label' => $this->getLabel(),
-            'hidden' => $this->isHidden(),
-            'sortable' => $this->isSortable(),
+            'type' => $this->getType(),
             'metadata' => $this->getMetadata(),
         ];
     }

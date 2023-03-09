@@ -40,9 +40,6 @@
             "Hybridly\\": [
                 "packages/laravel/src"
             ],
-            "Hybridly\\Tables\\": [
-                "packages/tables/src"
-            ],
             "Hybridly\\Tests\\": "tests/src",
             "Hybridly\\Tests\\Database\\Factories\\": "tests/database/factories"
         }
@@ -57,8 +54,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Hybridly\\ServiceProvider",
-                "Hybridly\\Tables\\ServiceProvider"
+                "Hybridly\\ServiceProvider"
             ]
         }
     },
@@ -87,8 +83,7 @@
         ]
     },
     "replace": {
-        "hybridly/laravel": "self.version",
-        "hybridly/tables": "self.version"
+        "hybridly/laravel": "self.version"
     },
     "minimum-stability": "stable",
     "prefer-stable": true

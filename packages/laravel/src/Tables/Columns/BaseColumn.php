@@ -1,25 +1,25 @@
 <?php
 
-namespace Hybridly\Tables\Filters;
+namespace Hybridly\Tables\Columns;
 
-use Hybridly\Tables\Filters;
-use Hybridly\Tables\Support\Component;
-use Hybridly\Tables\Support\Concerns;
+use Hybridly\Tables\Columns;
+use Hybridly\Tables\Component;
+use Hybridly\Tables\Concerns;
 
-abstract class BaseFilter extends Component
+abstract class BaseColumn extends Component
 {
+    use Columns\Concerns\CanTransformValue;
+    use Columns\Concerns\IsSortable;
     use Concerns\HasLabel;
     use Concerns\HasMetadata;
     use Concerns\HasName;
     use Concerns\HasType;
     use Concerns\IsHideable;
-    use Filters\Concerns\HasDefaultValue;
-    use Filters\Concerns\InteractsWithTableQuery;
 
     final public function __construct(string $name)
     {
         $this->name($name);
-        $this->label(str($name)->headline()->lower()->ucfirst());
+        $this->label(str($name)->afterLast('.')->headline()->lower()->ucfirst());
         $this->type('custom');
         $this->setUp();
     }
@@ -34,7 +34,7 @@ abstract class BaseFilter extends Component
     protected function getDefaultEvaluationParameters(): array
     {
         return [
-            'filter' => $this,
+            'column' => $this,
         ];
     }
 
@@ -42,8 +42,10 @@ abstract class BaseFilter extends Component
     {
         return [
             'name' => $this->getName(),
-            'label' => $this->getLabel(),
             'type' => $this->getType(),
+            'label' => $this->getLabel(),
+            'hidden' => $this->isHidden(),
+            'sortable' => $this->isSortable(),
             'metadata' => $this->getMetadata(),
         ];
     }

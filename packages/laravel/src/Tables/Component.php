@@ -1,8 +1,8 @@
 <?php
 
-namespace Hybridly\Tables\Support;
+namespace Hybridly\Tables;
 
-use Hybridly\Tables\Support\Concerns\EvaluatesClosures;
+use Hybridly\Tables\Concerns\EvaluatesClosures;
 use Illuminate\Support\Traits\Conditionable;
 use Illuminate\Support\Traits\Macroable;
 use Illuminate\Support\Traits\Tappable;

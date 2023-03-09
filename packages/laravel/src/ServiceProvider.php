@@ -25,6 +25,7 @@ class ServiceProvider extends PackageServiceProvider
     {
         $package
             ->name('hybridly')
+            ->hasRoute('hybridly')
             ->hasConfigFile()
             ->hasCommand(InstallCommand::class)
             ->hasCommand(I18nCommand::class)

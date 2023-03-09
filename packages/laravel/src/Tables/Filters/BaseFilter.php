@@ -2,9 +2,9 @@
 
 namespace Hybridly\Tables\Filters;
 
-use Hybridly\Tables\Filters;
 use Hybridly\Tables\Component;
 use Hybridly\Tables\Concerns;
+use Hybridly\Tables\Filters;
 
 abstract class BaseFilter extends Component
 {

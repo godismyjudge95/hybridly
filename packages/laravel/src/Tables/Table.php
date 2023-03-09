@@ -7,7 +7,6 @@ use Hybridly\Tables\Actions\InlineAction;
 use Hybridly\Tables\Columns\BaseColumn;
 use Hybridly\Tables\Contracts\HasTable;
 use Hybridly\Tables\Filters\BaseFilter;
-use Hybridly\Tables\Concerns;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
